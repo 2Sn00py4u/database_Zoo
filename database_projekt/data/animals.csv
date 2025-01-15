@@ -1,0 +1,21 @@
+Chip Nr;Tierart;Alter;Name;Futter;Gehege.Nr
+1;Löwe;12;Simba;Fleisch;1
+2;Löwe;13;Nala;Fleisch;1
+3;Netzpython;27;Kaa;Nagetiere;5
+4;Frosch;5;Prinz;Grillen;3
+5;Frosch;4;Bob;Grillen;3
+6;Frosch;6;Kermit;Grillen;3
+7;Frosch;8;Frank;Grillen;3
+8;Elefant;50;Kazoo;Blätter;2
+9;Elefant;33;Bambi;Blätter;2
+10;Elefant;5;Eddy;Blätter;2
+11;Elefant;35;Bertholt;Blätter;2
+12;Elefant;60;Cristina;Blätter;2
+13;Lemur;8;King Julien;Früchte;4
+14;Lemur;9;Maurice;Früchte;4
+15;Lemur;3;Mort;Früchte;4
+16;Pinguine;10;Skipper;Fisch;6
+17;Pinguine;11;Rico;Fisch;6
+18;Pinguine;12;Kowalski;Fisch;6
+19;Pinguine;15;Private;Fisch;6
+20;Pinguine;13;Buck;Fisch;6
