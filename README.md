@@ -1,7 +1,7 @@
-# The Schellen-Zoo
+#   <u><b>The Schellen-Zoo</b></u>
 ##
 
-# ---- Working-stuff -----------------
+#          Working-stuff
 ## TODOs
 1. Inserting the other datafiles
 2. Request to database
@@ -13,8 +13,7 @@
 1. Cages-data (.csv)
 2. Workers-data (.csv)
 3. Food-data (.csv)
-# -------------------------------------
+# _____________________________________
 
-# ---- Comments -----------------------
+# <b>  Comments  </b>
 ...
-# -------------------------------------
