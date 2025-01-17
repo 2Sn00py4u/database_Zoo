@@ -1,6 +1,4 @@
-!DOCTYPE html
 <h1>  <u><b>The Schellen-Zoo</b></u> </h1>
-##
 
 #          Working-stuff
 ## TODOs
