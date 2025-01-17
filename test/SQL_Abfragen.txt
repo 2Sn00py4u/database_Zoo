@@ -1,0 +1,38 @@
+SELECT Tierart FROM tiere GROUP BY Tierart ✔️
+
+2. 
+
+SELECT COUNT(ChipNr) AS Anzahl FROM tiere WHERE Tierart = "Elefant"
+
+3. 
+
+SELECT Name, MAX("Alter") FROM tiere
+
+4.
+
+SELECT Name, Vorname, MAX(Gehalt) FROM mitarbeiter
+
+5. 
+
+SELECT SUM(Gehalt) AS Summe FROM mitarbeiter
+
+6. 
+
+SELECT COUNT(mitarbeiter.ID) FROM mitarbeiter,tiere,gehege_zu_mitarbeiter WHERE tiere.Tierart = "Pinguine" AND tiere.Gehege_Nr = gehege_zu_mitarbeiter.Gehege_Nr AND tiere.Gehege_Nr = gehege.GehegeNr AND mitarbeiter.ID = gehege_zu_mitarbeiter.Mitarbeiter_ID
+
+SELECT COUNT(mitarbeiter.ID), (SELECT DISTINCT Gehege_Nr FROM tiere WHERE Tierart = "Pinguine") AS PinguinGehegeNr FROM mitarbeiter,gehege_zu_mitarbeiter,tiere WHERE mitarbeiter.ID = gehege_zu_mitarbeiter.Mitarbeiter_ID AND gehege_zu_mitarbeiter.Gehege_Nr = PinguinGehegeNr
+
+7. 
+
+SELECT Uhrzeit
+FROM Events
+GROUP BY Uhrzeit
+HAVING ?
+
+8. 
+
+SELECT (SELECT COUNT(Tierart) FROM tiere GROUP BY Tierart) AS AnzahlTiere, (SELECT  FROM tiere, gehege
+
+9. 
+
+SELECT COUNT(ID), Name FROM Mitarbeiter GROUP BY Name

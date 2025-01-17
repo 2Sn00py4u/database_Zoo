@@ -68,10 +68,25 @@ class zoo:
                 
 
 def main():
-    Zoo = zoo(DATABASE_PATH, ANIMAL_PATH, WORKER_PATH, ENCLOSURE_PATH, EVENTS_PATH, ENCLOSURE_TO_WORKER_PATH, True, True)
+    Zoo = zoo(DATABASE_PATH, ANIMAL_PATH, WORKER_PATH, ENCLOSURE_PATH, EVENTS_PATH, ENCLOSURE_TO_WORKER_PATH, False, False)
     print(Zoo.execute_command("SELECT * FROM tiere"))
     print(Zoo.execute_command("""SELECT chipNr FROM tiere WHERE 'Alter'=1"""))
-    
+    return Zoo
+
+def testing(Zoo: zoo):
+    try:
+        command = input(">>> ")
+        if command == "exit":
+           return False
+        else:
+            print(Zoo.execute_command(command))
+            return True
+    except Exception as e:
+        print(e)
+        return True
 
 if __name__ == "__main__":
-    main()
+    Zoo = main()
+    test = True
+    while test:
+        test = testing(Zoo)
