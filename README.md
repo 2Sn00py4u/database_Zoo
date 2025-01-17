@@ -1,5 +1,11 @@
 # The Schellen-Zoo
 
+## TODOs
+1. Inserting the other datafiles
+2. Request to database
+3. making it mor efficient
+4. ...
+
 ## Needs
 ### Data
 1. Cages-data (.csv)
