@@ -33,12 +33,13 @@ class zoo:
                         data_table.append(line)
                 
                 #  creating-table-command
-                attribute_command = "("
-                for i in range(len(attributes)-1):
-                    attribute_command += attributes[i] + ","
-                attribute_command += attributes[len(attributes)-1] + ")"
-                database_cursor.execute(f"""CREATE TABLE IF NOT EXISTS {table_name}{attribute_command}""")
-                
+                if create_tables:
+                    attribute_command = "("
+                    for i in range(len(attributes)-1):
+                        attribute_command += attributes[i] + ","
+                    attribute_command += attributes[len(attributes)-1] + ")"
+                    database_cursor.execute(f"""CREATE TABLE IF NOT EXISTS {table_name}{attribute_command}""")
+                    
                 #  inserting-values-command
                 if insert_values:
                     for data_tuple in data_table:
@@ -56,12 +57,11 @@ class zoo:
                 
         self.DB_CONNECTION = get_connection(self.DATABASE_PATH)
         self.DB_CURSOR = self.DB_CONNECTION.cursor()
-        if create_tables:
-            init_table(animal_csv, self.DB_CURSOR, "tiere", "ChipNr INTEGER PRIMARY_KEY", "Tierart TEXT", "'Alter' INTEGER", "Name TEXT", "Futter TEXT", "Gehege_Nr INTEGER")
-            init_table(worker_csv, self.DB_CURSOR, "mitarbeiter", "ID INTEGER PRIMARY_KEY", "Vorname TEXT", "Name TEXT", "Job TEXT", "Gehalt INTEGER")
-            init_table(enclosure_csv, self.DB_CURSOR, "gehege", "Nummer INTEGER PRIMARY_KEY", "Flaeche", "Biom TEXT", "Sicherheitslevel INTEGER")
-            init_table(event_csv, self.DB_CURSOR, "events", "ID INTEGER PRIMARY_KEY","Name TEXT","Uhrzeit INTEGER","Dauer INTEGER","Gehege_Nr INTEGER","Mitarbeiter_ID INTEGER")
-            init_table(enclosure_to_worker_csv, self.DB_CURSOR, "gehege_zu_mitarbeiter", "Gehege_Nr INTEGER","Mitarbeiter_ID INTEGER")
+        init_table(animal_csv, self.DB_CURSOR, "tiere", "ChipNr INTEGER PRIMARY_KEY", "Tierart TEXT", "'Alter' INTEGER", "Name TEXT", "Futter TEXT", "Gehege_Nr INTEGER")
+        init_table(worker_csv, self.DB_CURSOR, "mitarbeiter", "ID INTEGER PRIMARY_KEY", "Vorname TEXT", "Name TEXT", "Job TEXT", "Gehalt INTEGER")
+        init_table(enclosure_csv, self.DB_CURSOR, "gehege", "Nummer INTEGER PRIMARY_KEY", "Flaeche", "Biom TEXT", "Sicherheitslevel INTEGER")
+        init_table(event_csv, self.DB_CURSOR, "events", "ID INTEGER PRIMARY_KEY","Name TEXT","Uhrzeit INTEGER","Dauer INTEGER","Gehege_Nr INTEGER","Mitarbeiter_ID INTEGER")
+        init_table(enclosure_to_worker_csv, self.DB_CURSOR, "gehege_zu_mitarbeiter", "Gehege_Nr INTEGER","Mitarbeiter_ID INTEGER")
         self.DB_CONNECTION.commit()
         
     def execute_command(self, command:str) -> list:
@@ -73,37 +73,75 @@ class zoo:
             
     def clear_table(self, table_name:str):
         try:
-            self.execute_command(f"DELETE FROM {table_name}")
+            return self.execute_command(f"DELETE FROM {table_name}")
         except Exception as e:
             print(e)
 
     def delete_table(self, table_name:str):
         try:
-            self.execute_command(f"DROP TABLE {table_name}")
+            return self.execute_command(f"DROP TABLE {table_name}")
         except Exception as e:
             print(e)
-                    
+            
+    def list_tables(self):
+        try:
+            return self.execute_command("SELECT name FROM sqlite_master WHERE type='table'")
+        except Exception as e:
+            print(e)
+    
+    def close_connection(self):
+        self.DB_CONNECTION.close()         
         
                 
 
 def main():
-    Zoo = zoo(DATABASE_PATH, ANIMAL_PATH, WORKER_PATH, ENCLOSURE_PATH, EVENTS_PATH, ENCLOSURE_TO_WORKER_PATH, False, False)
+    Zoo = zoo(DATABASE_PATH, ANIMAL_PATH, WORKER_PATH, ENCLOSURE_PATH, EVENTS_PATH, ENCLOSURE_TO_WORKER_PATH, False, True)
     return Zoo
 
-def testing(Zoo: zoo):
+def sqlite_shell(Zoo: zoo):
     try:
         command = input(">>> ")
-        if command == "exit":
-           return False
-        else:
-            print(Zoo.execute_command(command))
+        
+        #  customcommands for interacting with the database via shell
+        if command == ".exit":  #  close connection and exit the script 
+            Zoo.close_connection()
+            return False
+        
+        if command == ".ls":  #  lists all available tables in the db
+            print(Zoo.list_tables())
             return True
+        
+        if command == ".restore":  #  restoring the whole database
+            Zoo.close_connection()
+            os.remove(DATABASE_PATH)
+            Zoo = zoo(DATABASE_PATH, ANIMAL_PATH, WORKER_PATH, ENCLOSURE_PATH, EVENTS_PATH, ENCLOSURE_TO_WORKER_PATH, True, True)
+            return Zoo
+
+        if command.startswith(".del_table "):  #  delete a table
+            Zoo.delete_table(command[10:])
+            return True
+        
+        if command.startswith(".clear_table "):  # delete all values of a table
+            Zoo.clear_table(command[12:])
+            return True
+        
+        else:
+            print(Zoo.execute_command(command))  #  execute SQL-command
+            return True
+        
     except Exception as e:
         print(e)
         return True
 
 if __name__ == "__main__":
-    Zoo = main()
-    test = True
-    while test:
-        test = testing(Zoo)
+    try:
+        Zoo = main()
+        return_val = True
+        while return_val:
+            return_val = sqlite_shell(Zoo)
+            if type(return_val) == zoo:
+                Zoo = return_val
+                return_val = True
+                
+    except KeyboardInterrupt:
+        print("closing...")
