@@ -1,8 +1,6 @@
 import sqlite3 as sql
 import os
 
-#  TODO: Tierärzte hinzufügen
-
 #  global variables
 ANIMAL_PATH = "data\\tiere.csv"
 WORKER_PATH = "data\\mitarbeiter.csv"

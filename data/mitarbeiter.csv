@@ -4,7 +4,7 @@ ID;Vorname;Name;Job;Gehalt
 3;Klaus;Klein;Tierpfleger;2500
 4;Dieter;Schulze;Tierleitung;2700
 5;Peter;Neumann;Tierpfleger;2500
-6;Gertrude;Mueller;Tierpfleger;2560
+6;Gertrude;Mueller;Tierarzt;2560
 7;Emil;Richter;Tierpfleger;2550
 8;Aly;Engel;Tierleitung;2600
 9;Rebekka;Mueller;Buchhaltung;4000
@@ -18,7 +18,7 @@ ID;Vorname;Name;Job;Gehalt
 17;Eloise;Bridgerton;Tierpfleger;2600
 18;Daniel;Schwarz;Tierpfleger;2500
 19;Colin;Bridgerton;Verwaltung;3000
-20;Antonia;Engel;Tierpfleger;2600
+20;Antonia;Engel;Tierarzt;2600
 21;Gregory;Bridgerton;Tierleitung;2700
 22;Leon;Arnold;Tierpfleger;2350
 23;Martha;Mueller;Verwaltung;3200
