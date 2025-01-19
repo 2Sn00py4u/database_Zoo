@@ -29,6 +29,7 @@ class zoo:
                         for a in range(len(line)):
                             line[a] = line[a].strip()
                         data_table.append(line)
+                    data.close()
                 
                 #  creating-table-command
                 attribute_command = "("
@@ -60,8 +61,9 @@ class zoo:
             except Exception as e:
                 print(e)
                 
-        self.DB_CONNECTION = get_connection(self.DATABASE_PATH)
-        self.DB_CURSOR = self.DB_CONNECTION.cursor()
+        self.DB_CONNECTION = get_connection(self.DATABASE_PATH)  #  get connection to db
+        self.DB_CURSOR = self.DB_CONNECTION.cursor()  #  get cursor
+        #  initialization of tables and values
         init_table(animal_csv, self.DB_CURSOR, "tiere", "ChipNr INTEGER PRIMARY_KEY", "Tierart TEXT", "'Alter' INTEGER", "Name TEXT", "Futter TEXT", "Gehege_Nr INTEGER")
         init_table(worker_csv, self.DB_CURSOR, "mitarbeiter", "ID INTEGER PRIMARY_KEY", "Vorname TEXT", "Name TEXT", "Job TEXT", "Gehalt INTEGER")
         init_table(enclosure_csv, self.DB_CURSOR, "gehege", "Nummer INTEGER PRIMARY_KEY", "Flaeche", "Biom TEXT", "Sicherheitslevel INTEGER")
@@ -69,41 +71,41 @@ class zoo:
         init_table(enclosure_to_worker_csv, self.DB_CURSOR, "gehege_zu_mitarbeiter", "Gehege_Nr INTEGER","Mitarbeiter_ID INTEGER")
         self.DB_CONNECTION.commit()
         
-    def execute_command(self, command:str) -> list:
+    def execute_command(self, command:str) -> list:  #  execute a SQL-request and returns result
         try:
             self.DB_CURSOR.execute(command)
             return self.DB_CURSOR.fetchall()
         except Exception as e:
             print(e)
             
-    def clear_table(self, table_name:str):
+    def clear_table(self, table_name:str):  #  delete all values of a table
         try:
             return self.execute_command(f"DELETE FROM {table_name}")
         except Exception as e:
             print(e)
 
-    def delete_table(self, table_name:str):
+    def delete_table(self, table_name:str):  #  delete a table
         try:
             return self.execute_command(f"DROP TABLE {table_name}")
         except Exception as e:
             print(e)
             
-    def list_tables(self):
+    def list_tables(self):  #  returns a list of all tables
         try:
             return self.execute_command("SELECT name FROM sqlite_master WHERE type='table'")
         except Exception as e:
             print(e)
     
-    def close_connection(self):
+    def close_connection(self):  #  close connection to db
         self.DB_CONNECTION.close()         
         
                 
 
-def main():
+def main(): #  creating a Zoo-instanz and returning it
     Zoo = zoo(DATABASE_PATH, ANIMAL_PATH, WORKER_PATH, ENCLOSURE_PATH, EVENTS_PATH, ENCLOSURE_TO_WORKER_PATH)
     return Zoo
 
-def sqlite_shell(Zoo: zoo):
+def sqlite_shell(Zoo: zoo):  #  is a SQL-shell for interacting with the db
     try:
         command = input(">>> ")
         
@@ -140,11 +142,11 @@ def sqlite_shell(Zoo: zoo):
 
 if __name__ == "__main__":
     try:
-        Zoo = main()
+        Zoo = main()  #  passing the Zoo-instanz
         return_val = True
-        while return_val:
+        while return_val:  #  processing shell until command '.exit'
             return_val = sqlite_shell(Zoo)
-            if type(return_val) == zoo:
+            if type(return_val) == zoo:  #  when getting a new instance (command '.restore') it should be updated
                 Zoo = return_val
                 return_val = True
                 
