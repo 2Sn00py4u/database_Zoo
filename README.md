@@ -1,6 +1,5 @@
-<h1>  <u><b>The Schellen-Zoo</b></u> </h1>
+# The SQLite3-Zoo
 
-#          Working-stuff
 ## TODOs
 1. Inserting the other datafiles ✔️
 2. Request to database ✔️
