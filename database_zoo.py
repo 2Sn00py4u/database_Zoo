@@ -13,7 +13,7 @@ DATABASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__name__)), "zoo.db
 
 
 class zoo:
-    def __init__(self, database_path:str, animal_csv:str, worker_csv:str, enclosure_csv:str, event_csv:str, enclosure_to_worker_csv:str, create_tables:bool, insert_values:bool):
+    def __init__(self, database_path:str, animal_csv:str, worker_csv:str, enclosure_csv:str, event_csv:str, enclosure_to_worker_csv:str):
         #  variables
         self.DATABASE_PATH = database_path
         
@@ -21,6 +21,21 @@ class zoo:
         def get_connection(database_path:str):
             return sql.connect(database_path)
         
+        def check_table():
+            connection = get_connection(database_path)
+            cursor = connection.cursor()
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
+            tables = cursor.fetchall()
+            if tables == []:
+                return True,True
+            else:
+                cursor.execute(f"SELECT * FROM {tables[0][0]}")
+                values = cursor.fetchall()
+                if values != []:
+                    return False,False
+                elif values == []:
+                    return False,True
+                
         def init_table(data_file:str, database_cursor:sql.Cursor, table_name:str, *attributes:tuple):
             try:
                 #  formating data
@@ -33,12 +48,19 @@ class zoo:
                         data_table.append(line)
                 
                 #  creating-table-command
-                if create_tables:
-                    attribute_command = "("
-                    for i in range(len(attributes)-1):
-                        attribute_command += attributes[i] + ","
-                    attribute_command += attributes[len(attributes)-1] + ")"
-                    database_cursor.execute(f"""CREATE TABLE IF NOT EXISTS {table_name}{attribute_command}""")
+                attribute_command = "("
+                for i in range(len(attributes)-1):
+                    attribute_command += attributes[i] + ","
+                attribute_command += attributes[len(attributes)-1] + ")"
+                database_cursor.execute(f"""CREATE TABLE IF NOT EXISTS {table_name}{attribute_command}""")
+                
+                #  checking table wether to insert values or not
+                database_cursor.execute(f"SELECT * FROM {table_name}")
+                values = database_cursor.fetchall()
+                if values != []:
+                    insert_values = False
+                elif values == []:
+                    insert_values = True
                     
                 #  inserting-values-command
                 if insert_values:
@@ -95,7 +117,7 @@ class zoo:
                 
 
 def main():
-    Zoo = zoo(DATABASE_PATH, ANIMAL_PATH, WORKER_PATH, ENCLOSURE_PATH, EVENTS_PATH, ENCLOSURE_TO_WORKER_PATH, False, True)
+    Zoo = zoo(DATABASE_PATH, ANIMAL_PATH, WORKER_PATH, ENCLOSURE_PATH, EVENTS_PATH, ENCLOSURE_TO_WORKER_PATH)
     return Zoo
 
 def sqlite_shell(Zoo: zoo):
@@ -114,7 +136,7 @@ def sqlite_shell(Zoo: zoo):
         if command == ".restore":  #  restoring the whole database
             Zoo.close_connection()
             os.remove(DATABASE_PATH)
-            Zoo = zoo(DATABASE_PATH, ANIMAL_PATH, WORKER_PATH, ENCLOSURE_PATH, EVENTS_PATH, ENCLOSURE_TO_WORKER_PATH, True, True)
+            Zoo = zoo(DATABASE_PATH, ANIMAL_PATH, WORKER_PATH, ENCLOSURE_PATH, EVENTS_PATH, ENCLOSURE_TO_WORKER_PATH)
             return Zoo
 
         if command.startswith(".del_table "):  #  delete a table
