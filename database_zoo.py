@@ -2,11 +2,11 @@ import sqlite3 as sql
 import os
 
 #  global variables
-ANIMAL_PATH = "data\\tiere.csv"
-WORKER_PATH = "data\\mitarbeiter.csv"
-ENCLOSURE_PATH = "data\\gehege.csv"
-EVENTS_PATH = "data\\events.csv"
-ENCLOSURE_TO_WORKER_PATH = "data\\gehege_zu_mitarbeiter.csv"
+ANIMAL_PATH = "zoo_data\\tiere.csv"
+WORKER_PATH = "zoo_data\\mitarbeiter.csv"
+ENCLOSURE_PATH = "zoo_data\\gehege.csv"
+EVENTS_PATH = "zoo_data\\events.csv"
+ENCLOSURE_TO_WORKER_PATH = "zoo_data\\gehege_zu_mitarbeiter.csv"
 DATABASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__name__)), "zoo.db")
 
 
