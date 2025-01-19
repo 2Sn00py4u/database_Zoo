@@ -29,7 +29,6 @@ class zoo:
                     for a in range(len(line)):
                         line[a] = line[a].strip()
                     data_table.append(line)
-            #print(data_table)
             
             #  creating table
             attribute_command = "("
@@ -69,8 +68,6 @@ class zoo:
 
 def main():
     Zoo = zoo(DATABASE_PATH, ANIMAL_PATH, WORKER_PATH, ENCLOSURE_PATH, EVENTS_PATH, ENCLOSURE_TO_WORKER_PATH, False, False)
-    print(Zoo.execute_command("SELECT * FROM tiere"))
-    print(Zoo.execute_command("""SELECT chipNr FROM tiere WHERE 'Alter'=1"""))
     return Zoo
 
 def testing(Zoo: zoo):

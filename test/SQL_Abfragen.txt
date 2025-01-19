@@ -2,11 +2,11 @@ SELECT Tierart FROM tiere GROUP BY Tierart ✔️
 
 2. 
 
-SELECT COUNT(ChipNr) AS Anzahl FROM tiere WHERE Tierart = "Elefant"
+SELECT COUNT(ChipNr) AS Anzahl FROM tiere WHERE Tierart = "Elefant"✔️
 
 3. 
 
-SELECT Name, MAX("Alter") FROM tiere
+SELECT Name, MAX("Alter") FROM tiere✔️
 
 4.
 
