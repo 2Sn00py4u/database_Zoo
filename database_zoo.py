@@ -1,8 +1,9 @@
 import sqlite3 as sql
 import os
 
-# TODO: Tierärzte hinzufügen
+#  TODO: Tierärzte hinzufügen
 
+#  global variables
 ANIMAL_PATH = "data\\tiere.csv"
 WORKER_PATH = "data\\mitarbeiter.csv"
 ENCLOSURE_PATH = "data\\gehege.csv"
@@ -21,34 +22,38 @@ class zoo:
             return sql.connect(database_path)
         
         def init_table(data_file:str, database_cursor:sql.Cursor, table_name:str, *attributes:tuple):
-            #  formating data
-            data_table = []
-            with open(data_file, "r") as data:
-                for line in list(data)[1:]:
-                    line = line.split(";")
-                    for a in range(len(line)):
-                        line[a] = line[a].strip()
-                    data_table.append(line)
-            
-            #  creating table
-            attribute_command = "("
-            for i in range(len(attributes)-1):
-                attribute_command += attributes[i] + ","
-            attribute_command += attributes[len(attributes)-1] + ")"
-            database_cursor.execute(f"""CREATE TABLE IF NOT EXISTS {table_name}{attribute_command}""")
-            #  inserting values
-            if insert_values:
-                for data_tuple in data_table:
-                    insert_command = f"""INSERT INTO {table_name} VALUES("""
-                    for i in range(len(data_tuple)-1):
-                        if "TEXT" in attributes[i]:
-                            insert_command += f'''"{data_tuple[i]}"''' + ","
-                        else:
-                            insert_command += data_tuple[i] + ","
-                    insert_command += data_tuple[len(data_tuple)-1] + ")"
-                    print(insert_command)
-                    database_cursor.execute(insert_command)
-            
+            try:
+                #  formating data
+                data_table = []
+                with open(data_file, "r") as data:
+                    for line in list(data)[1:]:
+                        line = line.split(";")
+                        for a in range(len(line)):
+                            line[a] = line[a].strip()
+                        data_table.append(line)
+                
+                #  creating-table-command
+                attribute_command = "("
+                for i in range(len(attributes)-1):
+                    attribute_command += attributes[i] + ","
+                attribute_command += attributes[len(attributes)-1] + ")"
+                database_cursor.execute(f"""CREATE TABLE IF NOT EXISTS {table_name}{attribute_command}""")
+                
+                #  inserting-values-command
+                if insert_values:
+                    for data_tuple in data_table:
+                        insert_command = f"""INSERT INTO {table_name} VALUES("""
+                        for i in range(len(data_tuple)-1):
+                            if "TEXT" in attributes[i]:
+                                insert_command += f'''"{data_tuple[i]}"''' + ","
+                            else:
+                                insert_command += data_tuple[i] + ","
+                        insert_command += data_tuple[len(data_tuple)-1] + ")"
+                        print(insert_command)
+                        database_cursor.execute(insert_command)
+            except Exception as e:
+                print(e)
+                
         self.DB_CONNECTION = get_connection(self.DATABASE_PATH)
         self.DB_CURSOR = self.DB_CONNECTION.cursor()
         if create_tables:
@@ -60,8 +65,23 @@ class zoo:
         self.DB_CONNECTION.commit()
         
     def execute_command(self, command:str) -> list:
-        self.DB_CURSOR.execute(command)
-        return self.DB_CURSOR.fetchall()
+        try:
+            self.DB_CURSOR.execute(command)
+            return self.DB_CURSOR.fetchall()
+        except Exception as e:
+            print(e)
+            
+    def clear_table(self, table_name:str):
+        try:
+            self.execute_command(f"DELETE FROM {table_name}")
+        except Exception as e:
+            print(e)
+
+    def delete_table(self, table_name:str):
+        try:
+            self.execute_command(f"DROP TABLE {table_name}")
+        except Exception as e:
+            print(e)
                     
         
                 
