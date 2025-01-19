@@ -18,21 +18,6 @@ class zoo:
         #functions
         def get_connection(database_path:str):
             return sql.connect(database_path)
-        
-        def check_table():
-            connection = get_connection(database_path)
-            cursor = connection.cursor()
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
-            tables = cursor.fetchall()
-            if tables == []:
-                return True,True
-            else:
-                cursor.execute(f"SELECT * FROM {tables[0][0]}")
-                values = cursor.fetchall()
-                if values != []:
-                    return False,False
-                elif values == []:
-                    return False,True
                 
         def init_table(data_file:str, database_cursor:sql.Cursor, table_name:str, *attributes:tuple):
             try:
